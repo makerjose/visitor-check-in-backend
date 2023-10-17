@@ -4,7 +4,11 @@ const cryptoRandomString = require("crypto-random-string");
 const Schema = mongoose.Schema;
 
 const visitorSchema = new Schema({
-  name: {
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
     type: String,
     required: true,
   },
@@ -21,6 +25,10 @@ const visitorSchema = new Schema({
   checkInTime: {
     type: Date,
     default: Date.now,
+  },
+  checkOutTime: {
+    type: Date,
+    default: "",
   },
   unitToken: {
     type: String,
