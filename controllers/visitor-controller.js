@@ -1,18 +1,20 @@
-const User = require("../model/Visitor");
+const Visitor = require("../model/Visitor");
 
 const createVisitor = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, phone } = req.body;
+    const { firstName, lastName, email, phoneNumber, department, unitToken } = req.body;
 
     // Create a new visitor object
     const visitor = new Visitor({
       firstName,
       lastName,
       email,
-      phone,
+      phoneNumber,
+      department,
+      unitToken,
     });
 
-    // Save the visitor to the database
+    // Save to the database
     await visitor.save();
 
     return res.status(201).json({ message: "Visitor created successfully", visitor });
@@ -21,6 +23,7 @@ const createVisitor = async (req, res, next) => {
     return res.status(500).json({ message: "Failed to create visitor" });
   }
 };
+
 
 
 const updateVisitor = async (req, res, next) => {

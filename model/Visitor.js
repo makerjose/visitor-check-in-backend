@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const cryptoRandomString = require("crypto-random-string");
 
 const Schema = mongoose.Schema;
 
@@ -17,23 +16,27 @@ const visitorSchema = new Schema({
     required: true,
     unique: true,
   },
-  phone: {
+  phoneNumber: {
     type: String,
     required: true,
     minlength: 10,
   },
+  department: {  
+    type: String,
+    required: true,
+  },
   checkInTime: {
     type: Date,
     default: Date.now,
-  },
+    timezone: 'Africa/Nairobi', 
+  },  
   checkOutTime: {
     type: Date,
-    default: "",
+    default: null, 
   },
   unitToken: {
     type: String,
-    default: () => cryptoRandomString({ length: 10, type: 'alphanumeric' }), // to generate a random 10-character token
-    unique: true,
+    required: true,
   },
 });
 
