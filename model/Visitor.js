@@ -11,6 +11,10 @@ const visitorSchema = new Schema({
     type: String,
     required: true,
   },
+  idNo: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -28,15 +32,18 @@ const visitorSchema = new Schema({
   checkInTime: {
     type: Date,
     default: Date.now,
-    timezone: 'Africa/Nairobi', 
-  },  
+  },
   checkOutTime: {
     type: Date,
-    default: null, 
+    default: null,
   },
   unitToken: {
     type: String,
     required: true,
+  },
+  served: {
+    type: Boolean,
+    default: false, 
   },
 });
 
