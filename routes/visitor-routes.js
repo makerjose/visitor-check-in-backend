@@ -10,9 +10,8 @@ const {
 const visitorRouter = express.Router();
 
 visitorRouter.post("/create", createVisitor);
-visitorRouter.put("/update", updateVisitor);
+visitorRouter.put("/update/:visitorId", updateVisitor); 
 visitorRouter.get("/fetch", fetchVisitors);
 visitorRouter.delete("/delete", deleteVisitor);
 
 module.exports = visitorRouter;
-
