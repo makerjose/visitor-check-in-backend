@@ -1,5 +1,6 @@
 const Visitor = require("../model/Visitor");
 const moment = require('moment-timezone');
+const createTransporter = require('./email');
 
 const createVisitor = async (req, res, next) => {
   try {
@@ -27,6 +28,23 @@ const createVisitor = async (req, res, next) => {
     // Save to the database
     await visitor.save();
 
+    // Send an email to the visitor
+    const transporter = createTransporter();
+
+    const mailOptions = {
+      from: 'josemakerdeng@gmail.com',
+      to: visitor.email, // send to visitor's email address
+      subject: 'Welcome to USIU',
+      text: `Hi ${visitor.lastName}, Welcome to USIU! Your unique token is: ${unitToken}`,
+    };
+
+    try {
+      const info = await transporter.sendMail(mailOptions); // sending email
+      console.log('Email sent:', info.response);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+
     return res.status(201).json({ message: "Visitor created successfully", visitor });
   } catch (error) {
     console.error(error);
@@ -34,7 +52,6 @@ const createVisitor = async (req, res, next) => {
   }
 };
 
-  
 
 const updateVisitor = async (req, res, next) => {
   try {
