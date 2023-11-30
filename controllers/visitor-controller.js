@@ -82,19 +82,70 @@ const updateVisitor = async (req, res, next) => {
   }
 };
 
-
 const fetchVisitors = async (req, res) => {
-    try {
-        // Fetch all visitor records from the database
-        const visitors = await Visitor.find();
-    
-        // Send the visitor data as a JSON response
-        res.status(200).json(visitors);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Failed to fetch visitors" });
-      }
-}
+  try {
+    const { searchTerm } = req.query;
+
+    let query = {};
+    if (searchTerm) {
+      // If searchTerm is provided, filter based on it
+      const startDate = new Date(searchTerm);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = new Date(searchTerm);
+      endDate.setHours(23, 59, 59, 999);
+
+      query = {
+        $or: [
+          { firstName: { $regex: new RegExp(searchTerm, 'i') } },
+          { lastName: { $regex: new RegExp(searchTerm, 'i') } },
+          { email: { $regex: new RegExp(searchTerm, 'i') } },
+          { phoneNumber: { $regex: new RegExp(searchTerm, 'i') } },
+          { checkInTime: { $gte: startDate, $lt: endDate } },
+        ],
+      };
+    }
+
+    const visitors = await Visitor.find(query).sort({ checkInTime: -1 });
+    res.json(visitors);
+  } catch (error) {
+    console.error("Failed to fetch visitors:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+// const fetchVisitors = async (req, res) => {
+//   try {
+//     const { searchTerm } = req.query;
+
+//     let query = {};
+//     if (searchTerm) {
+//       // If searchTerm is provided, filter based on it
+//       const startDate = new Date(searchTerm);
+//       const endDate = new Date(searchTerm);
+//       endDate.setDate(endDate.getDate() + 1); // Increment by 1 day to cover the whole day
+
+//       query = {
+//         $or: [
+//           { firstName: { $regex: new RegExp(searchTerm, 'i') } },
+//           { lastName: { $regex: new RegExp(searchTerm, 'i') } },
+//           { email: { $regex: new RegExp(searchTerm, 'i') } },
+//           { phoneNumber: { $regex: new RegExp(searchTerm, 'i') } },
+//           { checkInTime: { $gte: startDate, $lt: endDate } },
+//         ],
+//       };
+//     }
+
+//     const visitors = await Visitor.find(query).sort({ checkInTime: -1 });
+//     res.json(visitors);
+//   } catch (error) {
+//     console.error("Failed to fetch visitors:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
 
 const deleteVisitor = async (req, res, next) => {
   try {
