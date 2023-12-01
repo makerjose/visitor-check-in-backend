@@ -1,4 +1,5 @@
 const Visitor = require("../model/Visitor");
+const User = require('../model/User');
 const moment = require('moment-timezone');
 const createTransporter = require('./email');
 
@@ -115,44 +116,13 @@ const fetchVisitors = async (req, res) => {
 };
 
 
-// const fetchVisitors = async (req, res) => {
-//   try {
-//     const { searchTerm } = req.query;
-
-//     let query = {};
-//     if (searchTerm) {
-//       // If searchTerm is provided, filter based on it
-//       const startDate = new Date(searchTerm);
-//       const endDate = new Date(searchTerm);
-//       endDate.setDate(endDate.getDate() + 1); // Increment by 1 day to cover the whole day
-
-//       query = {
-//         $or: [
-//           { firstName: { $regex: new RegExp(searchTerm, 'i') } },
-//           { lastName: { $regex: new RegExp(searchTerm, 'i') } },
-//           { email: { $regex: new RegExp(searchTerm, 'i') } },
-//           { phoneNumber: { $regex: new RegExp(searchTerm, 'i') } },
-//           { checkInTime: { $gte: startDate, $lt: endDate } },
-//         ],
-//       };
-//     }
-
-//     const visitors = await Visitor.find(query).sort({ checkInTime: -1 });
-//     res.json(visitors);
-//   } catch (error) {
-//     console.error("Failed to fetch visitors:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-
 
 const deleteVisitor = async (req, res, next) => {
   try {
     const { visitorId } = req.params;
 
     // Find the visitor by ID and remove it
-    const visitor = await User.findByIdAndRemove(visitorId);
+    const visitor = await Visitor.findByIdAndRemove(visitorId);
 
     if (!visitor) {
       return res.status(404).json({ message: "Visitor not found" });
@@ -164,6 +134,8 @@ const deleteVisitor = async (req, res, next) => {
     return res.status(500).json({ message: "Failed to delete visitor" });
   }
 };
+
+
 
 exports.createVisitor = createVisitor;
 exports.updateVisitor = updateVisitor;

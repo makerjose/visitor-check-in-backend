@@ -12,6 +12,6 @@ const visitorRouter = express.Router();
 visitorRouter.post("/create", createVisitor);
 visitorRouter.put("/update/:visitorId", updateVisitor); 
 visitorRouter.get("/fetch", fetchVisitors);
-visitorRouter.delete("/delete", deleteVisitor);
+visitorRouter.delete("/delete/:visitorId", deleteVisitor);
 
 module.exports = visitorRouter;
